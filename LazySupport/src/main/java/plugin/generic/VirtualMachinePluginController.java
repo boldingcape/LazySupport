@@ -1,8 +1,8 @@
-package Plugin;
+package plugin.generic;
 
-public abstract class VirtualMachinePluginController {
-    public abstract void create();
-    public abstract void run();
-    public abstract void stop();
-    public abstract void delete();
+public interface VirtualMachinePluginController {
+    public void create();
+    public void run();
+    public void stop();
+    public void delete();
 }

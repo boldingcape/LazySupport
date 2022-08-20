@@ -1,5 +1,5 @@
-package Plugin;
+package plugin.generic;
 
-public abstract class VirtualMachinePluginChecker {
-    public abstract boolean pluginDetection();
+public interface VirtualMachinePluginChecker {
+    public void run();
 }
