@@ -1,3 +1,5 @@
+package Plugin;
+
 public abstract class VirtualMachinePluginController {
     public abstract void create();
     public abstract void run();
