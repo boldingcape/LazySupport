@@ -19,6 +19,13 @@
             <artifactId>junit-jupiter</artifactId>
             <version>5.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.virtualbox_6_1</groupId>
+            <artifactId>org.virtualbox_6_1</artifactId>
+            <version>6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/sdk/bindings/xpcom/java/vboxjxpcom.jar</systemPath>
+        </dependency>
     </dependencies>
 
 </project>
