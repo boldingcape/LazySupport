@@ -225,6 +225,12 @@ public class TestVBox
         VirtualBoxManager mgr = VirtualBoxManager.createInstance(null);
         IVirtualBox vbox = mgr.getVBox();
 
+
+        IMachine im = vbox.createMachine(null, "TEST-codeCreation", null, vbox.getMachines().get(0).getOSTypeId(), null);
+        im.saveSettings();
+        vbox.registerMachine(im);
+
+
         for (IDHCPServer dhcpServer: vbox.getDHCPServers()){
             System.out.println(dhcpServer.getNetworkName());
             if (dhcpServer.getNetworkName().equals("HostInterfaceNetworking-vboxnet0")){
