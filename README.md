@@ -11,6 +11,15 @@ Example: <br/>
 -Dsun.boot.library.path=/Applications/VirtualBox.app/Contents/MacOS <br/>
 -Dvbox.home=/Applications/VirtualBox.app/Contents/MacOS
 
+Base VM Image requisite:
+1. Expose port 8080/tcp and 8443/tcp
+2. Create a service which run bash script that call for dhclient -i <network-interface>
+
+DHCP Server behaviour:
+- it is lazy reactive, the status of expired ip will be update only when request to DHCP is done.
+- if all ip within the range provide are leased, new lease request will not be entertained.
+  - This bring the question why stick to 100-254?
+
 General Flow of running a machine from creation:
 - Create -> Clone -> Start -> Check Machine Status -> Ready -> Get IP <br/>
 -> SSH into Machine -> Run Script
