@@ -148,6 +148,7 @@ public class TestVBox
         ArrayList<String> env = new ArrayList<String>();
         IProgress p = m.launchVMProcess(session, "gui", env);
         progressBar(mgr, p, 10000);
+        System.out.println("Progress Bar wait completed");
         session.unlockMachine();
         // process system event queue
         mgr.waitForEvents(0);
@@ -222,77 +223,37 @@ public class TestVBox
     public static void main(String[] args)
     {
         VirtualBoxManager mgr = VirtualBoxManager.createInstance(null);
+        IVirtualBox vbox = mgr.getVBox();
 
-        boolean ws = false;
-        String  url = null;
-        String  user = null;
-        String  passwd = null;
 
-        for (int i = 0; i < args.length; i++)
-        {
-            if (args[i].equals("-w"))
-                ws = true;
-            else if (args[i].equals("-url"))
-                url = args[++i];
-            else if (args[i].equals("-user"))
-                user = args[++i];
-            else if (args[i].equals("-passwd"))
-                passwd = args[++i];
-        }
+        IMachine im = vbox.createMachine(null, "TEST-codeCreation", null, vbox.getMachines().get(0).getOSTypeId(), null);
+        im.saveSettings();
+        vbox.registerMachine(im);
 
-        if (ws)
-        {
-            try {
-                mgr.connect(url, user, passwd);
-            } catch (VBoxException e) {
-                e.printStackTrace();
-                System.out.println("Cannot connect, start webserver first!");
+
+        for (IDHCPServer dhcpServer: vbox.getDHCPServers()){
+            System.out.println(dhcpServer.getNetworkName());
+            if (dhcpServer.getNetworkName().equals("HostInterfaceNetworking-vboxnet0")){
+                Holder<String> address = new Holder<>();
+                Holder<String> state = new Holder<>();
+                Holder<Long> issued = new Holder<>();
+                Holder<Long> expired = new Holder<>();
+                // The integer refer to the index of ip address position, since you can assign more than 1 ip address to a device
+                dhcpServer.findLeaseByMAC("080027AEB98E", 0, address, state, issued, expired);
+                System.out.println("address: " + address.value);
             }
         }
 
-        try
-        {
-            IVirtualBox vbox = mgr.getVBox();
-            if (vbox != null)
-            {
-                System.out.println("VirtualBox version: " + vbox.getVersion() + "\n");
-                testEnumeration(mgr, vbox);
-                testReadLog(mgr, vbox);
-                testStart(mgr, vbox);
-                testEvents(mgr, vbox.getEventSource());
 
-                System.out.println("done, press Enter...");
-                int ch = System.in.read();
+        for (IMachine imach: mgr.getVBox().getMachines()) {
+            if (imach.getName().contains("Ticket #78955")) {
+                System.out.println(imach.getName());
+                System.out.println(imach.getHardwareUUID());
+                System.out.println(imach.getGuestPropertyValue("/VirtualBox/HostInfo/GUI/LanguageID"));
+                System.out.println(imach.getState());
+                System.out.println(imach.getSettingsFilePath());
             }
         }
-        catch (VBoxException e)
-        {
-            printErrorInfo(e);
-            System.out.println("Java stack trace:");
-            e.printStackTrace();
-        }
-        catch (RuntimeException e)
-        {
-            System.out.println("Runtime error: " + e.getMessage());
-            e.printStackTrace();
-        }
-        catch (java.io.IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        // process system event queue
-        mgr.waitForEvents(0);
-        if (ws)
-        {
-            try {
-                mgr.disconnect();
-            } catch (VBoxException e) {
-                e.printStackTrace();
-            }
-        }
-
-        mgr.cleanup();
 
     }
 
