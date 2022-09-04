@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.math.BigInteger;
 
+import static java.lang.Thread.sleep;
+
 public class TestVBox
 {
     static void processEvent(IEvent ev)
@@ -220,20 +222,42 @@ public class TestVBox
         }
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws InterruptedException {
         VirtualBoxManager mgr = VirtualBoxManager.createInstance(null);
         IVirtualBox vbox = mgr.getVBox();
 
 
-        IMachine im = vbox.createMachine(null, "TEST-codeCreation", null, vbox.getMachines().get(0).getOSTypeId(), null);
-        im.saveSettings();
-        vbox.registerMachine(im);
+        //IMachine im = vbox.createMachine(null, "TEST-codeCreation", null, vbox.getMachines().get(0).getOSTypeId(), null);
+        //im.saveSettings();
+        //vbox.registerMachine(im);
+
+
+        IDHCPServer dhcpServer1 = vbox.createDHCPServer("test");
+
+        //        dhcpServer1.setConfiguration("192.168.57.1", "255.255.255.0", "192.168.57.2" , "192.168.57.254");
+        //        dhcpServer1.setEnabled(true);
+        //        dhcpServer1.start("testTrunk", "testType");
+        //        vbox.removeDHCPServer(vbox.findDHCPServerByNetworkName("test"));
 
 
         for (IDHCPServer dhcpServer: vbox.getDHCPServers()){
             System.out.println(dhcpServer.getNetworkName());
             if (dhcpServer.getNetworkName().equals("HostInterfaceNetworking-vboxnet0")){
+
+                IDHCPConfig dhcpConfig = dhcpServer.getConfig(DHCPConfigScope.Global,null, (long) 0, true);
+                Holder<List<DHCPOption>> a = new Holder<>();
+                Holder<List<DHCPOptionEncoding>> b = new Holder<>();
+                dhcpConfig.getAllOptions(a, b);
+                System.out.println("dhcpOption: " + a.value.toString());
+                System.out.println("dhcpOptionEncoding: " + b.value.toString());
+                dhcpConfig.setMinLeaseTime((long) 600);
+                dhcpConfig.setDefaultLeaseTime((long) 28800);
+                dhcpConfig.setMaxLeaseTime((long) 86400);
+
+
+
+                //Don't really understand how does dhcpServer.start(), stop() work. As far as I can see, dhcpServer is start running from the start
+
                 Holder<String> address = new Holder<>();
                 Holder<String> state = new Holder<>();
                 Holder<Long> issued = new Holder<>();
