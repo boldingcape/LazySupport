@@ -1,7 +1,7 @@
 package generic;
 
 public class VirtualInstance {
-    private VirtualConfig vc;
+    private VirtualConfig vc = null;
     public VirtualConfig getVc() {
         return vc;
     }

@@ -232,52 +232,90 @@ public class TestVBox
         //vbox.registerMachine(im);
 
 
-        IDHCPServer dhcpServer1 = vbox.createDHCPServer("test");
 
-        //        dhcpServer1.setConfiguration("192.168.57.1", "255.255.255.0", "192.168.57.2" , "192.168.57.254");
-        //        dhcpServer1.setEnabled(true);
-        //        dhcpServer1.start("testTrunk", "testType");
-        //        vbox.removeDHCPServer(vbox.findDHCPServerByNetworkName("test"));
+//        IDHCPServer dhcpServer1 = vbox.createDHCPServer("HostInterfaceNetworking-vboxnet1");
+//        String ip = "192.168.57.1";
+//        dhcpServer1.setConfiguration(ip, "255.255.255.0", ("192.168.57.1".substring(0, ip.length()-1)+"2") , ("192.168.57.1".substring(0, ip.length()-1)+"254"));
+//        dhcpServer1.setEnabled(true);
+//        System.out.println("dhcp network name: " + dhcpServer1.getNetworkName());
+//        System.out.println("dhcp ip address: " + dhcpServer1.getIPAddress());
+//        System.out.println("dhcp network mask: " + dhcpServer1.getNetworkMask());
+//        System.out.println("dhcp lower: " + dhcpServer1.getLowerIP());
+//        System.out.println("dhcp upper: " + dhcpServer1.getUpperIP());
+//        vbox.removeDHCPServer(vbox.findDHCPServerByNetworkName("HostInterfaceNetworking-vboxnet1"));
 
+//        IHost host = vbox.getHost();
+//        Holder<IHostNetworkInterface> hostinterface = new Holder<>();
+//        host.createHostOnlyNetworkInterface(hostinterface);
+//        System.out.println("new interface name: " + hostinterface.value.getName());
+//        System.out.println("new interface network name: " + hostinterface.value.getNetworkName());
+//        System.out.println("new interface ip add: " + hostinterface.value.getIPAddress());
+//        System.out.println("new interface network mask: " + hostinterface.value.getNetworkMask());
+
+        for (IHostNetworkInterface ihost: vbox.getHost().getNetworkInterfaces()){
+            if (ihost.getNetworkName().equals("HostInterfaceNetworking-vboxnet1") ){
+                System.out.println("ihost name: " + ihost.getName());
+                System.out.println("ihost network: " + ihost.getNetworkName());
+                System.out.println("ihost ip:" + ihost.getIPAddress());
+                System.out.println("ihost status: " + ihost.getStatus().name());
+                System.out.println("ihost DHCP enabled? " + ihost.getDHCPEnabled());
+                ihost.enableStaticIPConfig("192.168.58.1", "255.255.255.0");
+            }
+            System.out.println("");
+        }
+
+        //Wondering how is DHCPServer finding the network interface to work on
+        //Is it because both the interface and dhcpserver have the same network name? don't think so, as it is just a string value
+        //Does it mean they are within each other network subnet range?
+        //Might be worth referencing the manual for slightly more information
+        //Using vboxmanage, can specify the network or interface. However, SDK cannot.
 
         for (IDHCPServer dhcpServer: vbox.getDHCPServers()){
-            System.out.println(dhcpServer.getNetworkName());
-            if (dhcpServer.getNetworkName().equals("HostInterfaceNetworking-vboxnet0")){
+            System.out.println("dhcpServer network name: " + dhcpServer.getNetworkName());
+            System.out.println("dhcpServer ip: " + dhcpServer.getIPAddress());
+            System.out.println("is dhcpServer enabled? " + dhcpServer.getEnabled());
 
-                IDHCPConfig dhcpConfig = dhcpServer.getConfig(DHCPConfigScope.Global,null, (long) 0, true);
-                Holder<List<DHCPOption>> a = new Holder<>();
-                Holder<List<DHCPOptionEncoding>> b = new Holder<>();
-                dhcpConfig.getAllOptions(a, b);
-                System.out.println("dhcpOption: " + a.value.toString());
-                System.out.println("dhcpOptionEncoding: " + b.value.toString());
-                dhcpConfig.setMinLeaseTime((long) 600);
-                dhcpConfig.setDefaultLeaseTime((long) 28800);
-                dhcpConfig.setMaxLeaseTime((long) 86400);
+//            if (dhcpServer.getNetworkName().equals("HostInterfaceNetworking-vboxnet2")){
+//                dhcpServer.setEnabled(true);
+//            }
 
-
-
-                //Don't really understand how does dhcpServer.start(), stop() work. As far as I can see, dhcpServer is start running from the start
-
-                Holder<String> address = new Holder<>();
-                Holder<String> state = new Holder<>();
-                Holder<Long> issued = new Holder<>();
-                Holder<Long> expired = new Holder<>();
-                // The integer refer to the index of ip address position, since you can assign more than 1 ip address to a device
-                dhcpServer.findLeaseByMAC("080027AEB98E", 0, address, state, issued, expired);
-                System.out.println("address: " + address.value);
-            }
+//            if (dhcpServer.getNetworkName().equals("HostInterfaceNetworking-vboxnet0")){
+//
+//                IDHCPConfig dhcpConfig = dhcpServer.getConfig(DHCPConfigScope.Global,null, (long) 0, true);
+//                Holder<List<DHCPOption>> a = new Holder<>();
+//                Holder<List<DHCPOptionEncoding>> b = new Holder<>();
+//                dhcpConfig.getAllOptions(a, b);
+//                System.out.println("dhcpOption: " + a.value.toString());
+//                System.out.println("dhcpOptionEncoding: " + b.value.toString());
+//                dhcpConfig.setMinLeaseTime((long) 600);
+//                dhcpConfig.setDefaultLeaseTime((long) 28800);
+//                dhcpConfig.setMaxLeaseTime((long) 86400);
+//
+//
+//
+//                //Don't really understand how does dhcpServer.start(), stop() work. As far as I can see, dhcpServer is start running from the start
+//
+//                Holder<String> address = new Holder<>();
+//                Holder<String> state = new Holder<>();
+//                Holder<Long> issued = new Holder<>();
+//                Holder<Long> expired = new Holder<>();
+//                // The integer refer to the index of ip address position, since you can assign more than 1 ip address to a device
+//                dhcpServer.findLeaseByMAC("080027AEB98E", 0, address, state, issued, expired);
+//                System.out.println("address: " + address.value);
+//            }
+            System.out.println("");
         }
 
 
-        for (IMachine imach: mgr.getVBox().getMachines()) {
-            if (imach.getName().contains("Ticket #78955")) {
-                System.out.println(imach.getName());
-                System.out.println(imach.getHardwareUUID());
-                System.out.println(imach.getGuestPropertyValue("/VirtualBox/HostInfo/GUI/LanguageID"));
-                System.out.println(imach.getState());
-                System.out.println(imach.getSettingsFilePath());
-            }
-        }
+//        for (IMachine imach: mgr.getVBox().getMachines()) {
+//            if (imach.getName().contains("TEST")) {
+//                System.out.println("TEST property");
+//                System.out.println(imach.getHardwareUUID());
+//                System.out.println(imach.getGuestPropertyValue("/VirtualBox/HostInfo/GUI/LanguageID"));
+//                System.out.println(imach.getState());
+//                System.out.println(imach.getSettingsFilePath());
+//            }
+//        }
 
     }
 

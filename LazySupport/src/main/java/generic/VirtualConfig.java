@@ -1,11 +1,25 @@
 package generic;
 
+import java.util.InvalidPropertiesFormatException;
+
 public class VirtualConfig {
 
     private String dhcpServerName;
     private long dhcpMinLeaseTime;
     private long dhcpDefaultLeaseTime;
     private long dhcpMaxLeaseTime;
+
+    public VirtualConfig(String dhcpServerName, long dhcpMinLeaseTime, long dhcpDefaultLeaseTime, long dhcpMaxLeaseTime) throws IllegalArgumentException {
+        if (dhcpMaxLeaseTime > dhcpMinLeaseTime && dhcpDefaultLeaseTime >= dhcpMinLeaseTime && dhcpDefaultLeaseTime <= dhcpMaxLeaseTime) {
+            this.dhcpServerName = dhcpServerName;
+            this.dhcpMinLeaseTime = dhcpMinLeaseTime;
+            this.dhcpDefaultLeaseTime = dhcpDefaultLeaseTime;
+            this.dhcpMaxLeaseTime = dhcpMaxLeaseTime;
+        }
+        else{
+            throw new IllegalArgumentException("Invalid DHCP leasing value.");
+        }
+    }
 
     public String getDhcpServerName() {
         return dhcpServerName;
@@ -20,7 +34,9 @@ public class VirtualConfig {
     }
 
     public void setDhcpMinLeaseTime(long dhcpMinLeaseTime) {
-        this.dhcpMinLeaseTime = dhcpMinLeaseTime;
+        if (dhcpMinLeaseTime < dhcpMaxLeaseTime && dhcpMinLeaseTime <= dhcpDefaultLeaseTime) {
+            this.dhcpMinLeaseTime = dhcpMinLeaseTime;
+        }
     }
 
     public long getDhcpDefaultLeaseTime() {
@@ -28,7 +44,9 @@ public class VirtualConfig {
     }
 
     public void setDhcpDefaultLeaseTime(long dhcpDefaultLeaseTime) {
-        this.dhcpDefaultLeaseTime = dhcpDefaultLeaseTime;
+        if (dhcpDefaultLeaseTime <= dhcpMaxLeaseTime && dhcpDefaultLeaseTime >= dhcpMinLeaseTime) {
+            this.dhcpDefaultLeaseTime = dhcpDefaultLeaseTime;
+        }
     }
 
     public long getDhcpMaxLeaseTime() {
@@ -36,6 +54,8 @@ public class VirtualConfig {
     }
 
     public void setDhcpMaxLeaseTime(long dhcpMaxLeaseTime) {
-        this.dhcpMaxLeaseTime = dhcpMaxLeaseTime;
+        if (dhcpMaxLeaseTime > dhcpMinLeaseTime && dhcpMaxLeaseTime >= dhcpDefaultLeaseTime) {
+            this.dhcpMaxLeaseTime = dhcpMaxLeaseTime;
+        }
     }
 }

@@ -29,7 +29,19 @@ public class VirtualBoxController implements MachineController {
             }
         }
         else{
-            //ToDo: Create DHCPServer to be used.
+            //Create an network interface and DHCP server to group guest machine in same network
+            Holder<IHostNetworkInterface> hostif = new Holder<>();
+            vbox.getHost().createHostOnlyNetworkInterface(hostif);
+            IDHCPServer dhcpServer = vbox.createDHCPServer(hostif.value.getNetworkName());
+            dhcpServer.setConfiguration(hostif.value.getIPAddress(),
+                    hostif.value.getNetworkMask(),
+                    (hostif.value.getIPAddress().substring(0, hostif.value.getIPAddress().length()-1)+"2"),
+                    (hostif.value.getIPAddress().substring(0, hostif.value.getIPAddress().length()-1)+"254"));
+            dhcpServer.setEnabled(true);
+            dhcpServer.getGlobalConfig().setMinLeaseTime(vi.getVc().getDhcpMinLeaseTime());
+            dhcpServer.getGlobalConfig().setDefaultLeaseTime(vi.getVc().getDhcpDefaultLeaseTime());
+            dhcpServer.getGlobalConfig().setMaxLeaseTime(vi.getVc().getDhcpMaxLeaseTime());
+            dhcpServer.restart();
         }
     }
 
