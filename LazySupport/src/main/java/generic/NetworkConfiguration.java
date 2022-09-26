@@ -1,13 +1,13 @@
 package generic;
 
-public class NetworkConfig {
+public class NetworkConfiguration {
 
     private String dhcpServerName;
     private long dhcpMinLeaseTime;
     private long dhcpDefaultLeaseTime;
     private long dhcpMaxLeaseTime;
 
-    public NetworkConfig(String dhcpServerName, long dhcpMinLeaseTime, long dhcpDefaultLeaseTime, long dhcpMaxLeaseTime) throws IllegalArgumentException {
+    public NetworkConfiguration(String dhcpServerName, long dhcpMinLeaseTime, long dhcpDefaultLeaseTime, long dhcpMaxLeaseTime) throws IllegalArgumentException {
         if (dhcpMaxLeaseTime > dhcpMinLeaseTime && dhcpDefaultLeaseTime >= dhcpMinLeaseTime && dhcpDefaultLeaseTime <= dhcpMaxLeaseTime) {
             this.dhcpServerName = dhcpServerName;
             this.dhcpMinLeaseTime = dhcpMinLeaseTime;

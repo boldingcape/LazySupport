@@ -2,12 +2,12 @@ package virtualbox;
 
 import generic.IHostNetworkInterfaceHolder;
 import generic.NetworkConfigInterface;
-import generic.NetworkConfig;
+import generic.NetworkConfiguration;
 import org.virtualbox_6_1.*;
 
-public class VirtualBoxNetworkController implements NetworkConfigInterface {
+public class VirtualBoxNetworkConfigController implements NetworkConfigInterface {
     @Override
-    public Boolean[] checkConfig(NetworkConfig nc, IVirtualBox vbox) {
+    public Boolean[] checkConfig(NetworkConfiguration nc, IVirtualBox vbox) {
         Boolean[] result = new Boolean[]{false, false};
         if (!search(nc, vbox)){
             return result;
@@ -23,7 +23,7 @@ public class VirtualBoxNetworkController implements NetworkConfigInterface {
     }
 
     @Override
-    public boolean create(NetworkConfig nc, IVirtualBox vbox, IHostNetworkInterfaceHolder iHostNetworkInterfaceHolder) {
+    public boolean create(NetworkConfiguration nc, IVirtualBox vbox, IHostNetworkInterfaceHolder iHostNetworkInterfaceHolder) {
         if (!search(nc, vbox)) {
             vbox.getHost().createHostOnlyNetworkInterface(iHostNetworkInterfaceHolder.getHolder());
             IHostNetworkInterface ihostnetworkinterface = iHostNetworkInterfaceHolder.getHolderValue();
@@ -41,7 +41,7 @@ public class VirtualBoxNetworkController implements NetworkConfigInterface {
     }
 
     @Override
-    public boolean modify(NetworkConfig nc, IVirtualBox vbox) {
+    public boolean modify(NetworkConfiguration nc, IVirtualBox vbox) {
             if (!search(nc, vbox)) {
                 IDHCPServer idhcpServer = vbox.findDHCPServerByNetworkName(nc.getDhcpServerName());
                 idhcpServer.getGlobalConfig().setMinLeaseTime(nc.getDhcpMinLeaseTime());
@@ -56,7 +56,7 @@ public class VirtualBoxNetworkController implements NetworkConfigInterface {
     }
 
     @Override
-    public boolean delete(NetworkConfig nc, IVirtualBox vbox,  IHostNetworkInterfaceHolder IHostNetworkInterfaceHolder) {
+    public boolean delete(NetworkConfiguration nc, IVirtualBox vbox, IHostNetworkInterfaceHolder IHostNetworkInterfaceHolder) {
         if (!search(nc, vbox)){
             vbox.removeDHCPServer(vbox.findDHCPServerByNetworkName(nc.getDhcpServerName()));
             vbox.getHost().removeHostOnlyNetworkInterface(IHostNetworkInterfaceHolder.getHolderValue().getId());
@@ -67,7 +67,7 @@ public class VirtualBoxNetworkController implements NetworkConfigInterface {
         }
     }
 
-    public boolean search(NetworkConfig nc, IVirtualBox vbox){
+    public boolean search(NetworkConfiguration nc, IVirtualBox vbox){
         try {
             return vbox.findDHCPServerByNetworkName(nc.getDhcpServerName()) instanceof IDHCPServer ? true:false;
         }

@@ -1,9 +1,9 @@
 package virtualbox;
 
-import generic.GuestInstanceControllerInterface;
+import generic.GuestMachineInterface;
 import org.virtualbox_6_1.*;
 
-public class VirtualBoxGuestController implements GuestInstanceControllerInterface {
+public class VirtualBoxGuest implements GuestMachineInterface {
 
 
     @Override
