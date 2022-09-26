@@ -1,0 +1,10 @@
+package generic;
+
+import org.virtualbox_6_1.IVirtualBox;
+
+public interface GuestInstanceControllerInterface {
+    public void create(IVirtualBox vbox);
+    public void up(IVirtualBox vbox);
+    public void stop(IVirtualBox vbox);
+    public void delete(IVirtualBox vbox);
+}
