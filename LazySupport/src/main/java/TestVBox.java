@@ -223,15 +223,12 @@ public class TestVBox
     }
 
     public static void main(String[] args) throws InterruptedException {
-        VirtualBoxManager mgr = VirtualBoxManager.createInstance(null);
-        IVirtualBox vbox = mgr.getVBox();
-
+//        VirtualBoxManager mgr = VirtualBoxManager.createInstance(null);
+//        IVirtualBox vbox = mgr.getVBox();
 
         //IMachine im = vbox.createMachine(null, "TEST-codeCreation", null, vbox.getMachines().get(0).getOSTypeId(), null);
         //im.saveSettings();
         //vbox.registerMachine(im);
-
-
 
 //        IDHCPServer dhcpServer1 = vbox.createDHCPServer("HostInterfaceNetworking-vboxnet1");
 //        String ip = "192.168.57.1";
@@ -252,17 +249,17 @@ public class TestVBox
 //        System.out.println("new interface ip add: " + hostinterface.value.getIPAddress());
 //        System.out.println("new interface network mask: " + hostinterface.value.getNetworkMask());
 
-        for (IHostNetworkInterface ihost: vbox.getHost().getNetworkInterfaces()){
-            if (ihost.getNetworkName().equals("HostInterfaceNetworking-vboxnet1") ){
-                System.out.println("ihost name: " + ihost.getName());
-                System.out.println("ihost network: " + ihost.getNetworkName());
-                System.out.println("ihost ip:" + ihost.getIPAddress());
-                System.out.println("ihost status: " + ihost.getStatus().name());
-                System.out.println("ihost DHCP enabled? " + ihost.getDHCPEnabled());
-                ihost.enableStaticIPConfig("192.168.58.1", "255.255.255.0");
-            }
-            System.out.println("");
-        }
+//        for (IHostNetworkInterface ihost: vbox.getHost().getNetworkInterfaces()){
+//            if (ihost.getNetworkName().equals("HostInterfaceNetworking-vboxnet1") ){
+//                System.out.println("ihost name: " + ihost.getName());
+//                System.out.println("ihost network: " + ihost.getNetworkName());
+//                System.out.println("ihost ip:" + ihost.getIPAddress());
+//                System.out.println("ihost status: " + ihost.getStatus().name());
+//                System.out.println("ihost DHCP enabled? " + ihost.getDHCPEnabled());
+//                ihost.enableStaticIPConfig("192.168.58.1", "255.255.255.0");
+//            }
+//            System.out.println("");
+//        }
 
         //Wondering how is DHCPServer finding the network interface to work on
         //Is it because both the interface and dhcpserver have the same network name? don't think so, as it is just a string value
@@ -270,10 +267,10 @@ public class TestVBox
         //Might be worth referencing the manual for slightly more information
         //Using vboxmanage, can specify the network or interface. However, SDK cannot.
 
-        for (IDHCPServer dhcpServer: vbox.getDHCPServers()){
-            System.out.println("dhcpServer network name: " + dhcpServer.getNetworkName());
-            System.out.println("dhcpServer ip: " + dhcpServer.getIPAddress());
-            System.out.println("is dhcpServer enabled? " + dhcpServer.getEnabled());
+//        for (IDHCPServer dhcpServer: vbox.getDHCPServers()){
+//            System.out.println("dhcpServer network name: " + dhcpServer.getNetworkName());
+//            System.out.println("dhcpServer ip: " + dhcpServer.getIPAddress());
+//            System.out.println("is dhcpServer enabled? " + dhcpServer.getEnabled());
 
 //            if (dhcpServer.getNetworkName().equals("HostInterfaceNetworking-vboxnet2")){
 //                dhcpServer.setEnabled(true);
@@ -303,8 +300,8 @@ public class TestVBox
 //                dhcpServer.findLeaseByMAC("080027AEB98E", 0, address, state, issued, expired);
 //                System.out.println("address: " + address.value);
 //            }
-            System.out.println("");
-        }
+//            System.out.println("");
+//        }
 
 
 //        for (IMachine imach: mgr.getVBox().getMachines()) {

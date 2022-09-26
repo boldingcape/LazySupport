@@ -1,15 +1,13 @@
 package generic;
 
-import java.util.InvalidPropertiesFormatException;
-
-public class VirtualConfig {
+public class NetworkConfig {
 
     private String dhcpServerName;
     private long dhcpMinLeaseTime;
     private long dhcpDefaultLeaseTime;
     private long dhcpMaxLeaseTime;
 
-    public VirtualConfig(String dhcpServerName, long dhcpMinLeaseTime, long dhcpDefaultLeaseTime, long dhcpMaxLeaseTime) throws IllegalArgumentException {
+    public NetworkConfig(String dhcpServerName, long dhcpMinLeaseTime, long dhcpDefaultLeaseTime, long dhcpMaxLeaseTime) throws IllegalArgumentException {
         if (dhcpMaxLeaseTime > dhcpMinLeaseTime && dhcpDefaultLeaseTime >= dhcpMinLeaseTime && dhcpDefaultLeaseTime <= dhcpMaxLeaseTime) {
             this.dhcpServerName = dhcpServerName;
             this.dhcpMinLeaseTime = dhcpMinLeaseTime;
