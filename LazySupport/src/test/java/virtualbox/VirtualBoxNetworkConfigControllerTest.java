@@ -1,7 +1,7 @@
 package virtualbox;
 
 import generic.IHostNetworkInterfaceHolder;
-import generic.NetworkConfig;
+import generic.NetworkConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -11,16 +11,16 @@ import org.virtualbox_6_1.*;
 
 import static org.mockito.Mockito.*;
 
-class VirtualBoxNetworkInterfaceControllerTest {
+class VirtualBoxNetworkConfigControllerTest {
     IVirtualBox vbox = null;
-    VirtualBoxNetworkController vboxnc = null;
-    NetworkConfig nc = null;
+    VirtualBoxNetworkConfigController vboxnc = null;
+    NetworkConfiguration nc = null;
     IHostNetworkInterfaceHolder iHostNetworkInterfaceHolder = null;
 
     @BeforeEach
     void mockCommonClass(){
         vbox = Mockito.mock(IVirtualBox.class);
-        vboxnc = Mockito.mock(VirtualBoxNetworkController.class);
+        vboxnc = Mockito.mock(VirtualBoxNetworkConfigController.class);
         iHostNetworkInterfaceHolder = Mockito.mock(IHostNetworkInterfaceHolder.class);
     }
 
@@ -42,7 +42,7 @@ class VirtualBoxNetworkInterfaceControllerTest {
             Holder<IHostNetworkInterface> hostif = Mockito.mock(Holder.class);
             IHostNetworkInterface ihostnetworkinterface = Mockito.mock(IHostNetworkInterface.class);
             IHost ihost = Mockito.mock(IHost.class);
-            nc = Mockito.mock(NetworkConfig.class);
+            nc = Mockito.mock(NetworkConfiguration.class);
 
             when(vboxnc.search(Mockito.any(),Mockito.any())).thenReturn(false);
             doNothing().when(vbox).removeDHCPServer(Mockito.any());
@@ -69,7 +69,7 @@ class VirtualBoxNetworkInterfaceControllerTest {
         void searchResultTrueShouldReturnTrue(){
             IDHCPServer idhcpServer = Mockito.mock(IDHCPServer.class);
             IDHCPGlobalConfig idhcpGlobalConfig = Mockito.mock(IDHCPGlobalConfig.class);
-            nc = Mockito.mock(NetworkConfig.class);
+            nc = Mockito.mock(NetworkConfiguration.class);
             when(vboxnc.search(Mockito.any(),Mockito.any())).thenReturn(false);
             when(vbox.findDHCPServerByNetworkName(Mockito.any())).thenReturn(idhcpServer);
             when(idhcpServer.getGlobalConfig()).thenReturn(idhcpGlobalConfig);
@@ -126,7 +126,7 @@ class VirtualBoxNetworkInterfaceControllerTest {
 
         @Test
         void searchResultTrueAndConfigMatchedShouldReturnArrayOfTrue(){
-            nc = Mockito.mock(NetworkConfig.class);
+            nc = Mockito.mock(NetworkConfiguration.class);
 
             when(vboxnc.search(Mockito.any(),Mockito.any())).thenReturn(true);
 
@@ -155,7 +155,7 @@ class VirtualBoxNetworkInterfaceControllerTest {
 
         @Test
         void searchResultTrueAndMinLeaseMismatchedShouldReturnArrayOfTrueAndFalse(){
-            nc = Mockito.mock(NetworkConfig.class);
+            nc = Mockito.mock(NetworkConfiguration.class);
 
             when(vboxnc.search(Mockito.any(),Mockito.any())).thenReturn(true);
 
@@ -184,7 +184,7 @@ class VirtualBoxNetworkInterfaceControllerTest {
 
         @Test
         void searchResultTrueAndDefaultLeaseMismatchedShouldReturnArrayOfTrueAndFalse(){
-            nc = Mockito.mock(NetworkConfig.class);
+            nc = Mockito.mock(NetworkConfiguration.class);
 
             when(vboxnc.search(Mockito.any(),Mockito.any())).thenReturn(true);
 
@@ -213,7 +213,7 @@ class VirtualBoxNetworkInterfaceControllerTest {
 
         @Test
         void searchResultTrueAndMaxLeaseMismatchedShouldReturnArrayOfTrueAndFalse(){
-            nc = Mockito.mock(NetworkConfig.class);
+            nc = Mockito.mock(NetworkConfiguration.class);
 
             when(vboxnc.search(Mockito.any(),Mockito.any())).thenReturn(true);
 
@@ -245,12 +245,12 @@ class VirtualBoxNetworkInterfaceControllerTest {
     class TestSearch {
         @BeforeEach
         void ClassObjectDeclaration(){
-            vboxnc = new VirtualBoxNetworkController();
+            vboxnc = new VirtualBoxNetworkConfigController();
         }
 
         @Test
         void searchInvalidDHCPNameShouldFail() {
-            nc = new NetworkConfig("HostInterfaceNetworking-vboxnet1", 600, 28800, 86400);
+            nc = new NetworkConfiguration("HostInterfaceNetworking-vboxnet1", 600, 28800, 86400);
             when(vbox.findDHCPServerByNetworkName(Mockito.anyString())).thenThrow(new NullPointerException("..") {
             });
             Assertions.assertEquals(false, vboxnc.search(nc, vbox));
@@ -258,7 +258,7 @@ class VirtualBoxNetworkInterfaceControllerTest {
 
         @Test
         void searchValidDHCPNameShouldPassed() {
-            nc = new NetworkConfig("HostInterfaceNetworking-vboxnet0", 600, 28800, 86400);
+            nc = new NetworkConfiguration("HostInterfaceNetworking-vboxnet0", 600, 28800, 86400);
             when(vbox.findDHCPServerByNetworkName(Mockito.anyString())).thenReturn(new IDHCPServer(null));
             Assertions.assertEquals(true, vboxnc.search(nc, vbox));
         }

@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NetworkConfigTest {
+class NetworkConfigurationTest {
 
-    NetworkConfig nc = null;
+    NetworkConfiguration nc = null;
 
     @BeforeEach
     void testPrep(){
-        nc = new NetworkConfig("HostInterfaceNetworking-vboxnet1", 600, 28800, 86400);
+        nc = new NetworkConfiguration("HostInterfaceNetworking-vboxnet1", 600, 28800, 86400);
     }
 
     @Test
@@ -27,22 +27,22 @@ class NetworkConfigTest {
 
     @Test
     void invalidMinLeaseAboveMaxLeaseNcContentDeclaration(){
-        assertThrows(IllegalArgumentException.class, () -> new NetworkConfig("HostInterfaceNetworking-vboxnet1", 86400, 28800, 86400));
+        assertThrows(IllegalArgumentException.class, () -> new NetworkConfiguration("HostInterfaceNetworking-vboxnet1", 86400, 28800, 86400));
     }
 
     @Test
     void invalidDefaultLeaseBelowMinLeaseNcContentDeclaration(){
-        assertThrows(IllegalArgumentException.class, () -> new NetworkConfig("HostInterfaceNetworking-vboxnet1", 600, 599, 86400));
+        assertThrows(IllegalArgumentException.class, () -> new NetworkConfiguration("HostInterfaceNetworking-vboxnet1", 600, 599, 86400));
     }
 
     @Test
     void invalidDefaultLeaseAboveMaxLeaseNcContentDeclaration(){
-        assertThrows(IllegalArgumentException.class, () -> new NetworkConfig("HostInterfaceNetworking-vboxnet1", 600, 86401, 86400));
+        assertThrows(IllegalArgumentException.class, () -> new NetworkConfiguration("HostInterfaceNetworking-vboxnet1", 600, 86401, 86400));
     }
 
     @Test
     void invalidMaxLeaseBelowMinLeaseNcContentDeclaration(){
-        assertThrows(IllegalArgumentException.class, () -> new NetworkConfig("HostInterfaceNetworking-vboxnet1", 600, 86401, 600));
+        assertThrows(IllegalArgumentException.class, () -> new NetworkConfiguration("HostInterfaceNetworking-vboxnet1", 600, 86401, 600));
     }
 
     @Test
